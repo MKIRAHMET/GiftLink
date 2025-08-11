@@ -97,7 +97,7 @@ return (
                     	</p>
                     	<p><strong>Date Added:</strong> 
                         <div className="badge bg-info">
-                            {gift.dateAdded}
+                            {gift.dateAdded}</div>
                             </p>
                     	<p><strong>Age (Years):</strong> 
 				{           <div className="badge bg-primary">
