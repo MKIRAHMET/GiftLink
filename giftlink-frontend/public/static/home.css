@@ -1,19 +1,86 @@
 /* Task 1: Style the body */
 body {
-    /* insert code here */
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;;
 }
 
 /* Task 2: Create a pseudo-element for the background and blur */
 body::before {
-    /* insert code here */
-}
-
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://wallpapers.com/images/featured/colorful-abstract-background-rra8u4adw1ubypzl.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(8px);
+    z-index": -1;
 /* Task 3: Style the content area */
 .content {
-    /* insert code here */
+    position: relative;
+    font-weight: 600;
+    z-index: 2;
+    text-align: center;
+    color: #1a1a1a;
+    max-width: 1200px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Task 4: Add styles for headings, paragraphs, and buttons */
 h1, h2, .lead, .btn-primary {
-    /* insert code here */
+   /* Container with max-width and h2 styling */
+.max-width h2 {
+  font-size: 4rem;    /* Adjust size */
+  font-weight: 700;     /* Make it bold */
+  color:#333       /* Dark blue/gray */
+  margin-bottom: 0.5rem;
 }
+
+/* Styling the quote paragraph */
+.lead {
+  font-style: italic;
+  font-size: 1.5rem;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Styling the primary button */
+.btn-primary {
+  background-color: #1E90FF;  
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 16rem 2.5rem;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #f50057;
+        transform: scale(1.05); 
+    }
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 3rem; 
+        }
+        h2 {
+            font-size: 2.5rem; 
+        }
+        .lead {
+            font-size: 1.25rem;
+        }
+    }
