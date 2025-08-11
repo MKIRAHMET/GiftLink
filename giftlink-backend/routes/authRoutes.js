@@ -1,74 +1,54 @@
 const express = require('express');
+const app = express();
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-const pino = require('pino');
+const { body, validationResult } = require('express-validator');
 const connectToDatabase = require('../models/db');
+const router = express.Router();
+const dotenv = require('dotenv');
+const pino = require('pino');  // Import Pino logger
+
+const logger = pino();  // Create a Pino logger instance
 
 dotenv.config();
-const logger = pino();
-const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Register Route
 router.post('/register', async (req, res) => {
     try {
-        // 1. Connect to DB
+        // Task 1: Connect to `giftsdb` in MongoDB through `connectToDatabase` in `db.js`
         const db = await connectToDatabase();
-        if (!db) {
-            logger.error('Database connection failed');
-            return res.status(500).send('Database connection error');
-        }
 
-        // 2. Access collection
-        const usersCollection = db.collection('users');
-        if (!usersCollection) {
-            logger.error('Users collection not found');
-            return res.status(500).send('Users collection not found');
-        }
+        // Task 2: Access MongoDB collection
+        const collection = db.collection("users");
 
-        // 3. Check for existing user
-        const existingUser = await usersCollection.findOne({ email: req.body.email });
-        if (existingUser) {
-            logger.warn('User with this email already exists');
-            return res.status(400).json({ error: 'User with this email already exists' });
-        }
+        //Task 3: Check for existing email
+        const existingEmail = await collection.findOne({ email: req.body.email });
 
-        // 4. Hash password
         const salt = await bcryptjs.genSalt(10);
-        const hashedPassword = await bcryptjs.hash(req.body.password, salt);
+        const hash = await bcryptjs.hash(req.body.password, salt);
+        const email = req.body.email;
 
-        // 5. Create new user object
-        const newUser = {
+        //Task 4: Save user details in database
+        const newUser = await collection.insertOne({
             email: req.body.email,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            password: hashedPassword,
+            password: hash,
             createdAt: new Date(),
-        };
+        });
 
-        // 6. Insert into DB
-        const insertResult = await usersCollection.insertOne(newUser);
-        if (!insertResult.acknowledged) {
-            logger.error('User registration failed');
-            return res.status(500).send('User registration failed');
-        }
-
-        // 7. Create JWT
         const payload = {
             user: {
-                id: insertResult.insertedId,
+                id: newUser.insertedId,
             },
         };
-        const authtoken = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
+        const authtoken = jwt.sign(payload, JWT_SECRET);
         logger.info('User registered successfully');
-        res.json({ authtoken, email: newUser.email });
-
-    } catch (error) {
-        logger.error(error.message);
-        res.status(500).send('Internal server error');
+        res.json({authtoken,email});
+    } catch (e) {
+         return res.status(500).send('Internal server error');
     }
 });
 
