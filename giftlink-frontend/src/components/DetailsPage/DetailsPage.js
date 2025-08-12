@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './DetailsPage.css';
 import {urlConfig} from '../../config';
@@ -10,33 +10,33 @@ function DetailsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-	useEffect(() => {
-        const authenticationToken = sessionStorage.getItem('auth-token');
-        if (!authenticationToken) {
-            navigate('/app/login');
-            return;
-        }
-        const fetchGift = async () => {
-            try {
-
-                const response = await fetch(`${urlConfig.backendUrl}/api/gifts/${productId}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setGift(data);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+useEffect(() => {
+    const authenticationToken = sessionStorage.getItem('auth-token');
+    if (!authenticationToken) {
+        navigate('/app/login');
+        return;
+    }
+    const fetchGift = async () => {
+        try {
+            const response = await fetch(`${urlConfig.backendUrl}/api/gifts/${productId}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        };
+            const data = await response.json();
+            setGift(data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        fetchGift();
+    fetchGift();
 
-        window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
-    }, [productId]);
+}, [productId, navigate]);
+
 
 
     const handleBackClick = () => {
